@@ -80,6 +80,7 @@ function Student(id, name, teach = "", learn = ""){
 ////////////////////////////////////////////////////////
 function Students(students) {
     this.students = students;
+    this.cycles = 0;
     this.proposed = 0;
     this.members = this.students.length;
     this.printStudents = function(){
@@ -117,6 +118,50 @@ function Students(students) {
             target.removeLowerThan(student);
         });
     }
+    this.thirdStep = function(){
+        //Third Step, remove cycles
+        this.checkCycles();
+        while(this.cycles) {
+            var i = 0;
+            var achou = false;
+            while(i < this.members && !achou) {
+                if(this.students[i].candidate.length > 1) {
+                    achou = true;
+                } else {
+                    i++;
+                }
+            }
+            var p = [];
+            var q = [];
+            var candidate;
+            p.push(this.students[i]);
+            q.push(this.students[i].candidate[1]);
+            achou = false;
+            while(!achou){
+                candidate = q[q.length-1].candidate[q[q.length-1].candidate.length-1];
+                if(p.indexOf(candidate) != -1){
+                    achou = true;
+                    p.push(candidate);
+                } else {
+                    p.push(candidate);
+                    q.push(candidate.candidate[1]);
+                }                 
+            }
+            for(i = 0; i < q.length; i++) {
+                q[i].removeCandidate(p[i+1]);
+                p[i+1].removeCandidate(q[i]);
+            }
+            this.checkCycles();
+        }
+    }
+    this.checkCycles = function(){
+        this.cycles = 0;
+        this.students.forEach(student => {
+            if (student.candidate.length > 1){
+                this.cycles = 1;
+            }
+        });
+    }
 }
 ////////////////////////////////////////////////////////
 charlie = new Student(1, "Charlie");
@@ -142,5 +187,8 @@ roomMate.firstStep();
 roomMate.printStudents();
 console.log("------------------");
 roomMate.secondStep();
+roomMate.printStudents();
+console.log("------------------");
+roomMate.thirdStep();
 roomMate.printStudents();
 ////////////////////////////////////////////////////////
