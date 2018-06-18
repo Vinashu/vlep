@@ -1,3 +1,4 @@
+////////////////////////////////////////////////////////
 function Student(id, name, teach = "", learn = ""){
     this.hold = false;
     this.proposed = false;
@@ -76,7 +77,48 @@ function Student(id, name, teach = "", learn = ""){
         console.log(this.name + " => " + nameList.join(", "));
     }
 }
-
+////////////////////////////////////////////////////////
+function Students(students) {
+    this.students = students;
+    this.proposed = 0;
+    this.members = this.students.length;
+    this.printStudents = function(){
+        this.students.forEach(student => {
+            student.printCandidateList();
+        });        
+    }
+    this.firstStep = function(){
+        //First Step, every person need to make a propose
+        while(this.proposed < this.members){
+            this.students.forEach(student => {
+                if(!student.proposed) {
+                    student.proposed = true;
+                    this.proposed++;
+                    var target = student.candidate[0];
+                    //console.log(student.name + " proposed " + target.name);
+                    if(!target.hold){
+                        target.hold = true;
+                        target.addHold(student);
+                        //console.log(target.name + " is holding " + student.name);
+                    } else {
+                        //console.log(target.name + " is considering " + student.name);
+                        target.addHold(student);
+                        target.takeDecision();
+                        this.proposed--;
+                    }
+                }
+            });
+        }
+    }
+    this.secondStep = function(){
+        //Second Step, remove the less prefered
+        this.students.forEach(student => {
+            var target = student.candidate[0];
+            target.removeLowerThan(student);
+        });
+    }
+}
+////////////////////////////////////////////////////////
 charlie = new Student(1, "Charlie");
 peter   = new Student(2, "Peter");
 elise   = new Student(3, "Elise");
@@ -92,42 +134,13 @@ kelly.addCandidate([peter, charlie, sam, elise, paul]);
 sam.addCandidate([charlie, paul, kelly, elise, peter]);
 
 students = [charlie, peter, elise, paul, kelly, sam];
-students.forEach(student => {
-    student.printCandidateList();
-});
-students.proposed = 0;
-students.members  = students.length;
-//First Step, every person need to make a propose
-while(students.proposed < students.members){
-    students.forEach(student => {
-        if(!student.proposed) {
-            student.proposed = true;
-            students.proposed++;
-            var target = student.candidate[0];
-            //console.log(student.name + " proposed " + target.name);
-            if(!target.hold){
-                target.hold = true;
-                target.addHold(student);
-                //console.log(target.name + " is holding " + student.name);
-            } else {
-                //console.log(target.name + " is considering " + student.name);
-                target.addHold(student);
-                target.takeDecision();
-                students.proposed--;
-            }
-        }
-    });
-}
+////////////////////////////////////////////////////////
+roomMate = new Students(students);
+roomMate.printStudents();
 console.log("------------------");
-students.forEach(student => {
-    student.printCandidateList();
-});
-//Second Step, remove the less prefered
-students.forEach(student => {
-    var target = student.candidate[0];
-    target.removeLowerThan(student);
-});
+roomMate.firstStep();
+roomMate.printStudents();
 console.log("------------------");
-students.forEach(student => {
-    student.printCandidateList();
-});
+roomMate.secondStep();
+roomMate.printStudents();
+////////////////////////////////////////////////////////
