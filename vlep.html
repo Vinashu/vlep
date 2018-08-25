@@ -1,0 +1,29 @@
+<!doctype html>
+<html ng-app="vlep">
+<head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <script src="lib/angular.js"></script>
+    <script src="lib/angular-animate.js"></script>
+	<script src="lib/angular-locale_pt-br.js"></script>    
+    <script src="js/vlep.js"></script>        
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap.css">
+</head>
+<body ng-controller="vlepCtrl">
+    <div class="container">                 
+        <div ng-repeat="student in students"> 
+            ID: {{student.id}} <br>
+            Username: {{student.userName}}  <br>
+            Name: {{student.name}} <br>
+            Family name: {{student.surName}} <br>
+            Gender: {{student.gender}} <br>
+            Student ID: {{student.studentID}} <br>
+            Country: {{student.country}} <br>
+            Teach: {{student.teach}} <br>
+            Learn: {{student.learn}} <br>
+            Social: {{student.social}} <br>
+            <hr>
+        </div>
+    </div>
+</body>    
+</html>
