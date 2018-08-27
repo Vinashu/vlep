@@ -22,7 +22,8 @@ function Student(data){
     this.addCandidate = function(candidate){
         if(Array.isArray(candidate)){
             this.candidate = this.candidate.concat(candidate);
-        } else if(candidate != "" && !candidate){
+        //} else if(candidate != "" && !candidate){
+        } else {
             this.candidate.push(candidate);
         }
     }
@@ -91,9 +92,96 @@ function Student(data){
     this.printCandidateList = function(){
         var nameList = [];
         this.candidate.forEach(candidate => {
-            nameList.push(candidate.name);
+            nameList.push(candidate.id);
         })
-        console.log(this.name + " => " + nameList.join(", "));
+        //console.log(this.name + " => " + nameList.join(", "));
+        return (this.name + " => " + nameList.join(", "));
+    }
+}
+////////////////////////////////////////////////////////
+function Students(students) {
+    this.students = students;
+    this.cycles = 0;
+    this.proposed = 0;
+    this.members = this.students.length;
+    this.printStudents = function(){
+        this.students.forEach(student => {
+            student.printCandidateList();
+        });        
+    }
+    this.firstStep = function(){
+        //First Step, every person need to make a proposal
+        while(this.proposed < this.members){
+            this.students.forEach(student => {
+                if(!student.proposed) {
+                    student.proposed = true;
+                    this.proposed++;
+                    var target = student.candidate[0];
+                    //console.log(student.name + " proposed " + target.name);
+                    if(!target.hold){
+                        target.hold = true;
+                        target.addHold(student);
+                        //console.log(target.name + " is holding " + student.name);
+                    } else {
+                        //console.log(target.name + " is considering " + student.name);
+                        target.addHold(student);
+                        target.takeDecision();
+                        this.proposed--;
+                    }
+                }
+            });
+        }
+    }
+    this.secondStep = function(){
+        //Second Step, remove the less prefered
+        this.students.forEach(student => {
+            var target = student.candidate[0];
+            target.removeLowerThan(student);
+        });
+    }
+    this.thirdStep = function(){
+        //Third Step, remove cycles
+        this.checkCycles();
+        while(this.cycles) {
+            var i = 0;
+            var achou = false;
+            while(i < this.members && !achou) {
+                if(this.students[i].candidate.length > 1) {
+                    achou = true;
+                } else {
+                    i++;
+                }
+            }
+            var p = [];
+            var q = [];
+            var candidate;
+            p.push(this.students[i]);
+            q.push(this.students[i].candidate[1]);
+            achou = false;
+            while(!achou){
+                candidate = q[q.length-1].candidate[q[q.length-1].candidate.length-1];
+                if(p.indexOf(candidate) != -1){
+                    achou = true;
+                    p.push(candidate);
+                } else {
+                    p.push(candidate);
+                    q.push(candidate.candidate[1]);
+                }                 
+            }
+            for(i = 0; i < q.length; i++) {
+                q[i].removeCandidate(p[i+1]);
+                p[i+1].removeCandidate(q[i]);
+            }
+            this.checkCycles();
+        }
+    }
+    this.checkCycles = function(){
+        this.cycles = 0;
+        this.students.forEach(student => {
+            if (student.candidate.length > 1){
+                this.cycles = 1;
+            }
+        });
     }
 }
 
@@ -111,6 +199,37 @@ vlep.controller("vlepCtrl", function ($scope, $http) {
                     data.forEach(function(item){
                         var student = new Student(item);
                         $scope.students.push(student);
+                    });
+                    $scope.students = new Students($scope.students);
+                    $scope.students.students.forEach(function(student){
+                        var myStudents = $scope.students.students;
+                        //check all languages I would like to learn
+                        student.learn.forEach(function(language){
+                            //check all other students
+                            myStudents.forEach(function(otherStudent){
+                                //if the student is not me
+                                if(otherStudent.id != student.id){
+                                    //if the student is able to teach that language
+                                   if(otherStudent.teach.indexOf(language)!= -1 && student.candidate.indexOf(otherStudent) == -1) {
+                                        //add the student as a candidate
+                                        student.addCandidate(otherStudent);
+                                    }
+                                } 
+                            });
+                        });
+                        student.social.forEach(function(social){
+                            //check all other students
+                            myStudents.forEach(function(otherStudent){
+                                //if the student is not me
+                                if(otherStudent.id != student.id){
+                                    //if the student is able to teach that language
+                                   if(otherStudent.social.indexOf(social)!= -1 && student.candidate.indexOf(otherStudent) == -1) {
+                                        //add the student as a candidate
+                                        student.addCandidate(otherStudent);
+                                    }
+                                } 
+                            });
+                        });
                     });
                 }
                 console.log(data, status); 

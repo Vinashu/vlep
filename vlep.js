@@ -72,7 +72,7 @@ function Student(id, name, teach = "", learn = ""){
     this.printCandidateList = function(){
         var nameList = [];
         this.candidate.forEach(candidate => {
-            nameList.push(candidate.name);
+            nameList.push(candidate.id);
         })
         console.log(this.name + " => " + nameList.join(", "));
     }

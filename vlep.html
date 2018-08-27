@@ -17,7 +17,7 @@
                 <button class="btn btn-primary" ng-click="getStudents(file)">Load data from file</button>
                 <hr>
             </div>                       
-        <div ng-repeat="student in students"> 
+        <div ng-repeat="student in students.students"> 
             ID: {{student.id}} <br>
             Username: {{student.userName}}  <br>
             Name: {{student.name}} <br>
@@ -28,6 +28,8 @@
             Teach: {{student.teach}} <br>
             Learn: {{student.learn}} <br>
             Social: {{student.social}} <br>
+            Candidate: {{student.printCandidateList()}} <br>      
+            Candidates: {{student.candidate.length}}      
             <hr>
         </div>
     </div>
