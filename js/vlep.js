@@ -95,7 +95,7 @@ function Student(data){
             nameList.push(candidate.id);
         })
         //console.log(this.name + " => " + nameList.join(", "));
-        return (this.name + " => " + nameList.join(", "));
+        return (this.id + " => " + nameList.join(", "));
     }
 }
 ////////////////////////////////////////////////////////
@@ -109,6 +109,38 @@ function Students(students) {
             student.printCandidateList();
         });        
     }
+    this.generateCandidates = function(){
+        var myStudents = this.students;
+        this.students.forEach(function(student, index, myStudents){
+            //check all languages I would like to learn
+            student.learn.forEach(function(language){
+                //check all other students
+                myStudents.forEach(function(otherStudent){
+                    //if the student is not me
+                    if(otherStudent.id != student.id){
+                        //if the student is able to teach that language
+                       if(otherStudent.teach.indexOf(language)!= -1 && student.candidate.indexOf(otherStudent) == -1) {
+                            //add the student as a candidate
+                            student.addCandidate(otherStudent);
+                        }
+                    } 
+                });
+            });
+            student.social.forEach(function(social){
+                //check all other students
+                myStudents.forEach(function(otherStudent){
+                    //if the student is not me
+                    if(otherStudent.id != student.id){
+                        //if the student is able to teach that language
+                       if(otherStudent.social.indexOf(social)!= -1 && student.candidate.indexOf(otherStudent) == -1) {
+                            //add the student as a candidate
+                            student.addCandidate(otherStudent);
+                        }
+                    } 
+                });
+            });
+        });
+    };
     this.firstStep = function(){
         //First Step, every person need to make a proposal
         while(this.proposed < this.members){
@@ -201,36 +233,7 @@ vlep.controller("vlepCtrl", function ($scope, $http) {
                         $scope.students.push(student);
                     });
                     $scope.students = new Students($scope.students);
-                    $scope.students.students.forEach(function(student){
-                        var myStudents = $scope.students.students;
-                        //check all languages I would like to learn
-                        student.learn.forEach(function(language){
-                            //check all other students
-                            myStudents.forEach(function(otherStudent){
-                                //if the student is not me
-                                if(otherStudent.id != student.id){
-                                    //if the student is able to teach that language
-                                   if(otherStudent.teach.indexOf(language)!= -1 && student.candidate.indexOf(otherStudent) == -1) {
-                                        //add the student as a candidate
-                                        student.addCandidate(otherStudent);
-                                    }
-                                } 
-                            });
-                        });
-                        student.social.forEach(function(social){
-                            //check all other students
-                            myStudents.forEach(function(otherStudent){
-                                //if the student is not me
-                                if(otherStudent.id != student.id){
-                                    //if the student is able to teach that language
-                                   if(otherStudent.social.indexOf(social)!= -1 && student.candidate.indexOf(otherStudent) == -1) {
-                                        //add the student as a candidate
-                                        student.addCandidate(otherStudent);
-                                    }
-                                } 
-                            });
-                        });
-                    });
+                    $scope.students.generateCandidates();
                 }
                 console.log(data, status); 
                 console.log($scope.students);                                      
