@@ -2,11 +2,9 @@
     header('Content-type: text/html; charset=UTF-8') ;
     header('Content-Type: application/json');
     include_once("classStudent.php");     
-
+    $file = $_GET["file"];
     $dir    = '../uploads';
-    $files = array_diff(scandir($dir, 1), array('.','..'));
-
-    $csv = array_map('str_getcsv', file($dir ."/" . $files[0]));
+    $csv = array_map('str_getcsv', file($dir ."/" . $file));
     $students = [];
     $i = 0;
     foreach ($csv as $unit) {

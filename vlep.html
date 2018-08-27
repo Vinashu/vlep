@@ -10,7 +10,13 @@
     <link rel="stylesheet" type="text/css" href="lib/bootstrap.css">
 </head>
 <body ng-controller="vlepCtrl">
-    <div class="container">                 
+    <div class="container"> 
+        <h3>Available files:</h3> 
+        <div ng-repeat="file in files"> 
+                {{file}}
+                <button class="btn btn-primary" ng-click="getStudents(file)">Load data from file</button>
+                <hr>
+            </div>                       
         <div ng-repeat="student in students"> 
             ID: {{student.id}} <br>
             Username: {{student.userName}}  <br>

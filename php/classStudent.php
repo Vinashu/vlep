@@ -37,6 +37,16 @@ class Student {
     }
 
     public function clearData($item){
+        $temp = [];
+        foreach ($this->$item as $value) {
+            if($value != ""){
+                array_push($temp, $value);
+            }
+        }
+        $this->$item = $temp;
+    }
+    /*
+    public function clearData($item){
         $size = count($this->$item);
         for($i = $size -1; $i >= 0; $i--) {
             if(empty($this->$item[$i])){
@@ -44,5 +54,7 @@ class Student {
             }
         }
     }
+    */
+    
 }
 ?>

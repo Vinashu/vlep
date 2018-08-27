@@ -1,11 +1,22 @@
 ////////////////////////////////////////////////////////
-function Student(id, name, teach = "", learn = ""){
+function Student(data){
     this.hold = false;
     this.proposed = false;
-    this.id = id;
-    this.name = name;
+    this.id = data.id;
+    this.name = data.name;
+    this.userName = data.userName;
+    this.surName = data.surName;
+    this.firstName = data.firstName;
+    this.lastName = data.lastName;
+    this.gender = data.gender;
+    this.studentID = data.studentID;
+    this.faculty = data.faculty;
+    this.status = data.status;
+    this.major = data.major;
+    this.country = data.country;
     this.teach = [];
     this.learn = [];
+    this.social = [];
     this.holding = [];
     this.candidate = [];    
     this.addCandidate = function(candidate){
@@ -22,7 +33,7 @@ function Student(id, name, teach = "", learn = ""){
             this.teach.push(teach);
         }
     }
-    this.addTeach(teach);
+    this.addTeach(data.teach);
     this.addLearn = function(learn){
         if(Array.isArray(learn)){
             this.learn = this.learn.concat(learn);
@@ -30,7 +41,15 @@ function Student(id, name, teach = "", learn = ""){
             this.learn.push(learn);
         }
     }
-    this.addLearn(learn);
+    this.addLearn(data.learn);
+    this.addSocial = function(social){
+        if(Array.isArray(social)){
+            this.social = this.social.concat(social);
+        } else if(social != "" && !social){
+            this.learn.push(social);
+        }
+    }
+    this.addSocial(data.social);    
     this.addHold = function(proposed){
         if(Array.isArray(proposed)){
             this.holding = this.holding.concat(proposed);
