@@ -94,7 +94,7 @@ function Student(data){
         this.candidate.forEach(candidate => {
             nameList.push(candidate.id);
         })
-        //console.log(this.name + " => " + nameList.join(", "));
+        console.log(this.name + " => " + nameList.join(", "));
         return (this.id + " => " + nameList.join(", "));
     }
 }
@@ -234,6 +234,16 @@ vlep.controller("vlepCtrl", function ($scope, $http) {
                     });
                     $scope.students = new Students($scope.students);
                     $scope.students.generateCandidates();
+                    //$scope.students.printStudents();
+                    console.log("------------------");
+                    $scope.students.firstStep();
+                    //$scope.students.printStudents();
+                    //console.log("------------------");
+                    $scope.students.secondStep();
+                    //$scope.students.printStudents();
+                    //console.log("------------------");
+                    $scope.students.thirdStep();
+                    //$scope.students.printStudents();
                 }
                 console.log(data, status); 
                 console.log($scope.students);                                      
