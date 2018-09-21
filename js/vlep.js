@@ -286,5 +286,5 @@ vlep.controller("vlepCtrl", function ($scope, $http) {
             console.log(data, status);
         });
     };     
-    $scope.getFiles();    
+    $scope.getFiles();     
 });

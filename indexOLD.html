@@ -1,0 +1,32 @@
+
+<!doctype html>
+<html>
+    <head>
+        <title> Upload-file</title>
+        <meta charset="utf-8">
+    </head>
+<body>
+    <form id="uploadForm" enctype="multipart/form-data" action="upload.php" target="uploadFrame" method="post">
+        <label for="uploadFile">Data file:</label>
+        <input id="uploadFile" name="uploadFile" type="file" />
+        <br /><br />
+        <input id="uploadSubmit" type="submit" value="Upload" />
+    </form>
+    <div id="uploadInfos">
+        <div id="uploadStatus">No uploads in progress.</div>
+        <iframe id="uploadFrame" name="uploadFrame" charset="utf-8"></iframe>
+    </div>
+    <script>
+        function uploadEnd(error,path){ 
+        if(error !== false){
+            document.getElementById('uploadStatus').innerHTML = 'Upload successfull.  ' 
+        }else { 
+        document.getElementById('uploadStatus').innerHTML = 'Hilston, we got a problem!';
+        }
+        document.getElementById('uploadForm').addEventListener('submit',function(){ 
+        document.getElementById('uploadStatus').innerHTML = 'Upload in progress...............';
+        },true);
+        }
+    </script>
+</body>
+</html>
